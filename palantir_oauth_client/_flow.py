@@ -15,6 +15,7 @@
 import hashlib
 import logging
 import os
+import sys
 import requests_oauthlib
 import webbrowser
 import wsgiref.simple_server
@@ -149,7 +150,10 @@ class Flow(object):
 
         print(authorization_prompt_message.format(url=auth_url))
 
-        code = input(authorization_code_message)
+        if sys.platform == 'emscripten':
+            code = await input(authorization_code_message)
+        else:
+            code = input(authorization_code_message)
 
         self.fetch_token(code=code)
         return self.credentials
